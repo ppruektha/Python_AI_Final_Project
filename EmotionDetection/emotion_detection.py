@@ -9,22 +9,42 @@ def emotion_detector(text_to_analyze):
     
     formatted_response = json.loads(response.text)
 
-    anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
-    disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
-    fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
-    joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
-    sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
-
-    emotion_dict = {'Anger': anger_score, 'Disgust': disgust_score, 'Fear': fear_score, 'Joy': joy_score, 'Sadness': sadness_score}
+    if response.status_code == 200:
+        anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
+        disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
+        fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
+        joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
+        sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
     
-    # Initialize variables to track the key with the maximum value
-    max_key = None
-    max_value = float('-inf')  # Initialize to negative infinity
+        emotion_dict = {'Anger': anger_score, 'Disgust': disgust_score, 'Fear': fear_score, 'Joy': joy_score, 'Sadness': sadness_score}
+    
+        # Initialize variables to track the key with the maximum value
+        max_key = None
+        max_value = float('-inf')  # Initialize to negative infinity
 
-    # Loop through the dictionary to find the maximum value
-    for key, value in emotion_dict.items():
-        if value > max_value:
-            max_value = value
-            max_key = key
+        # Loop through the dictionary to find the maximum value
+        for key, value in emotion_dict.items():
+            if value > max_value:
+                max_value = value
+                max_key = key
+    
+    
+    elif response.status_code == 400:
+        anger_score = None
+        disgust_score = None
+        fear_score = None
+        joy_score = None
+        sadness_score = None
+        max_key = None
+
+    else:
+        anger_score = None
+        disgust_score = None
+        fear_score = None
+        joy_score = None
+        sadness_score = None
+        max_key = None
+
+
 
     return {'anger': anger_score, 'disgust': disgust_score, 'fear': fear_score, 'joy': joy_score, 'sadness': sadness_score, 'dominant_emotion': max_key}
